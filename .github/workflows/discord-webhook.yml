@@ -5,10 +5,6 @@ on:
   schedule:
     # Tous les lundis à midi (UTC)
     - cron: "0 12 * * 1"
-
-  # Permet de tester manuellement depuis GitHub
-  workflow_dispatch:
-
 jobs:
   send-discord-webhook:
     runs-on: ubuntu-latest
