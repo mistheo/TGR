@@ -1,0 +1,25 @@
+name: Discord Weekly Webhook
+
+on:
+  schedule:
+    # Tous les lundis à midi (UTC)
+    - cron: "0 12 * * 1"
+
+  # Permet de tester manuellement depuis GitHub
+  workflow_dispatch:
+
+jobs:
+  send-discord-webhook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Discord webhook
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "content": "https://tenor.com/view/ermessy-tgr-the-great-review-gaming-gamer-gif-3172608629208230764"
+          }' \
+          "$DISCORD_WEBHOOK_URL"
