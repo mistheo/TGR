@@ -3,8 +3,9 @@ name: Discord Weekly Webhook
 on:
   workflow_dispatch:
   schedule:
-    # Tous les lundis à midi (UTC)
+    # Tous les lundis à midi UTC
     - cron: "0 12 * * 1"
+
 jobs:
   send-discord-webhook:
     runs-on: ubuntu-latest
@@ -13,10 +14,24 @@ jobs:
       - name: Send Discord webhook
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+          DISCORD_WEBHOOK_NAME: ${{ vars.DISCORD_WEBHOOK_NAME }}
+          DISCORD_WEBHOOK_AVATAR_URL: ${{ vars.DISCORD_WEBHOOK_AVATAR_URL }}
+          DISCORD_CONTENT: ${{ vars.DISCORD_CONTENT }}
+
         run: |
-          curl -H "Content-Type: application/json" \
-          -X POST \
-          -d '{
-            "content": "https://tenor.com/view/ermessy-tgr-the-great-review-gaming-gamer-gif-3172608629208230764"
-          }' \
-          "$DISCORD_WEBHOOK_URL"
+          payload=$(jq -n \
+            --arg username "$DISCORD_WEBHOOK_NAME" \
+            --arg avatar_url "$DISCORD_WEBHOOK_AVATAR_URL" \
+            --arg content "$DISCORD_CONTENT" \
+            '{
+              username: $username,
+              avatar_url: $avatar_url,
+              content: $content
+            }')
+
+          curl \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$payload" \
+            "$DISCORD_WEBHOOK_URL"
