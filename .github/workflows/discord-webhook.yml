@@ -3,8 +3,8 @@ name: Discord Weekly Webhook
 on:
   workflow_dispatch:
   schedule:
-    # Tous les lundis à midi UTC
-    - cron: "0 12 * * 1"
+    #  Runs at 12:00, only on Monday
+    - cron: "*/1 * * * *"
 
 jobs:
   send-discord-webhook:
